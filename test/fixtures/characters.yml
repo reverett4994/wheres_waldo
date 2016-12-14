@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  minx: 1
+  maxx: 1
+  miny: 1
+  maxy: 1
+
+two:
+  minx: 1
+  maxx: 1
+  miny: 1
+  maxy: 1

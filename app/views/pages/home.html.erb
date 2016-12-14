@@ -1,0 +1,84 @@
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Wheres Waldo</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="#">Home</a></li>
+      <li><a href="#">Page 1</a></li>
+      <li><a href="#">Page 2</a></li>
+      <li><a href="#">Page 3</a></li>
+    </ul>
+  </div>
+</nav>
+<p id="time"><%= loaded_time=Time.now.to_f*1000%></p>
+<%=image_tag("waldo1.jpg", alt: "Example Image", id:"pic1")%>
+<div id="pics_div">
+  <h2>Characters Left to Find</h2>
+  <%=image_tag("waldo.jpg", alt: "Example Image", class:"small_pics",id:"pic_0", :data=>{toggle:"tooltip"},title:"Waldo")%>
+  <%=image_tag("wenda.jpg", alt: "Example Image", class:"small_pics",id:"pic_1", :data=>{toggle:"tooltip"},title:"Wenda")%>
+  <%=image_tag("wizard.jpg", alt: "Example Image", class:"small_pics",id:"pic_2", :data=>{toggle:"tooltip"},title:"Wizard")%>
+</div>
+<div id="marker">
+  <div class="list-group">
+    <a href="#" onclick="javascript:pickCharacter(0);" class="list-group-item list-group-item-action">Waldo</a>
+    <a href="#" onclick="javascript:pickCharacter(1);" class="list-group-item list-group-item-action">Wenda</a>
+    <a href="#" onclick="javascript:pickCharacter(2);" class="list-group-item list-group-item-action">Wizard</a>
+  </div>
+</div>
+<div id="cover0"></div>
+<div id="cover1"></div>
+<div id="cover2"></div>
+<script>
+
+ // Location of Waldo    X: 897-955     Y: 873-967  ID: 0
+ // Location of Wenda    X: 916-941     Y: 708-753  ID: 1
+ // Location of Wizard   X: 1359-1388   Y: 911-945  ID: 2
+
+
+$('#pic1').click(function(e) {
+    posX = $(this).offset().left, posY = $(this).offset().top;
+    // alert((e.pageX - posX)+ ' , ' + (e.pageY - posY));
+    clickX=e.pageX - posX;
+    clickY=e.pageY - posY;
+    $("#marker").css( {position:"absolute", top:e.pageY, left: e.pageX});
+    $("#marker").show();
+  });
+
+function pickCharacter(pick){
+  $("#marker").hide();
+  var character_id=pick
+  $.ajax({
+    type:"GET",
+    url:"characters/",
+    dataType:"json",
+    success:function(result){
+      var character=result[character_id];
+      console.log(character);
+      console.log(clickX);
+      console.log(clickY);
+      if (clickX>character.minx && clickX<character.maxx && clickY>character.miny && clickY<character.maxy){
+        $("#cover"+character_id).css( {position:"absolute", top:character.miny-20 + posY, left: character.minx + posX});
+        $("#cover"+character_id).show();
+        $("#pic_"+character_id).css({opacity:.2})
+        sweetAlert("Good job!", "You Found Them", "success");
+      }
+      else{
+        sweetAlert("Opps!", "That Was No One", "warning");
+      }
+      if($('#pic_0').css('opacity') == .2 && $('#pic_1').css('opacity') == .2 && $('#pic_2').css('opacity') == .2){
+        var start = parseFloat( $("#time").text() )
+        var d = new Date();
+        var end = d.getTime();
+        var totalTime=((end-start)/1000).toFixed(3);
+        console.log( totalTime );
+        sweetAlert("YOU WON!!", "It Took You "+totalTime+" Seconds", "success");
+      }
+    }
+  })
+};
+
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
+</script>

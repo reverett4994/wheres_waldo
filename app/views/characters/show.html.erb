@@ -1,0 +1,27 @@
+<p id="notice"><%= notice %></p>
+<p>
+  <strong>Name:</strong>
+  <%= @character.name %>
+</p>
+<p>
+  <strong>Minx:</strong>
+  <%= @character.minx %>
+</p>
+
+<p>
+  <strong>Maxx:</strong>
+  <%= @character.maxx %>
+</p>
+
+<p>
+  <strong>Miny:</strong>
+  <%= @character.miny %>
+</p>
+
+<p>
+  <strong>Maxy:</strong>
+  <%= @character.maxy %>
+</p>
+
+<%= link_to 'Edit', edit_character_path(@character) %> |
+<%= link_to 'Back', characters_path %>
