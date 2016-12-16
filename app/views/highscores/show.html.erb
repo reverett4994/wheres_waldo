@@ -1,0 +1,23 @@
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Wheres Waldo</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="#">Game</a></li>
+      <li class="active"><a href="/highscores">High Scores</a></li>
+    </ul>
+  </div>
+</nav>
+<p>
+  <strong>User:</strong>
+  <%= @highscore.user %>
+</p>
+
+<p>
+  <strong>Score:</strong>
+  <%= @highscore.score %>
+</p>
+
+<%= link_to 'Edit', edit_highscore_path(@highscore) %> |
+<%= link_to 'Back', highscores_path %>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161213090756) do
+ActiveRecord::Schema.define(version: 20161216080309) do
 
   create_table "characters", force: :cascade do |t|
     t.integer  "minx",       limit: 4
@@ -19,6 +19,13 @@ ActiveRecord::Schema.define(version: 20161213090756) do
     t.integer  "miny",       limit: 4
     t.integer  "maxy",       limit: 4
     t.string   "name",       limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "highscores", force: :cascade do |t|
+    t.string   "user",       limit: 255
+    t.float    "score",      limit: 24
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
   end

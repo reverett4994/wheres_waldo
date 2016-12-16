@@ -1,17 +1,18 @@
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">Wheres Waldo</a>
+      <a class="navbar-brand" href="/">Wheres Waldo</a>
     </div>
     <ul class="nav navbar-nav">
-      <li class="active"><a href="#">Home</a></li>
-      <li><a href="#">Page 1</a></li>
-      <li><a href="#">Page 2</a></li>
-      <li><a href="#">Page 3</a></li>
+      <li class="active"><a href="/">Game</a></li>
+      <li><a href="/highscores">High Scores</a></li>
     </ul>
   </div>
 </nav>
 <p id="time"><%= loaded_time=Time.now.to_f*1000%></p>
+<div class="page-header">
+  <h1>Find The Hidden Characters Below as Fast as Possible!</h1>
+</div>
 <%=image_tag("waldo1.jpg", alt: "Example Image", id:"pic1")%>
 <div id="pics_div">
   <h2>Characters Left to Find</h2>
@@ -26,6 +27,7 @@
     <a href="#" onclick="javascript:pickCharacter(2);" class="list-group-item list-group-item-action">Wizard</a>
   </div>
 </div>
+<hr>
 <div id="cover0"></div>
 <div id="cover1"></div>
 <div id="cover2"></div>
@@ -64,7 +66,7 @@ function pickCharacter(pick){
         sweetAlert("Good job!", "You Found Them", "success");
       }
       else{
-        sweetAlert("Opps!", "That Was No One", "warning");
+        sweetAlert("Opps!", "Try Again", "warning");
       }
       if($('#pic_0').css('opacity') == .2 && $('#pic_1').css('opacity') == .2 && $('#pic_2').css('opacity') == .2){
         var start = parseFloat( $("#time").text() )
@@ -72,8 +74,44 @@ function pickCharacter(pick){
         var end = d.getTime();
         var totalTime=((end-start)/1000).toFixed(3);
         console.log( totalTime );
-        sweetAlert("YOU WON!!", "It Took You "+totalTime+" Seconds", "success");
+
+        swal({
+          title: "Congratulations You Finished! Your Score is "+totalTime+" Seconds",
+          text: "Enter Your Name Below To Submit Highscore:",
+          type: "input",
+          showCancelButton: false,
+          closeOnConfirm: false,
+          animation: "slide-from-top",
+          inputPlaceholder: "Your Name"
+        },
+        function(inputValue){
+          if (inputValue === false) return false;
+
+          if (inputValue === "") {
+            swal.showInputError("You need to write something!");
+            return false
+          }
+
+          $.ajax({
+            type: "POST",
+            url: "/highscores",
+            dataType:"json",
+            data: { highscore: { user: inputValue, score: totalTime } },
+            success:function(data) {
+              window.location.assign("/highscores")
+              return false;
+            },
+            error:function(data) {
+              console.log(data);
+              return false;
+            }
+          });
+        });
       }
+
+
+
+
     }
   })
 };
